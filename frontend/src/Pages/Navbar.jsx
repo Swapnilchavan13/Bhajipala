@@ -9,11 +9,12 @@ export const Navbar = () => {
         <Link to=''>
         <h3>Login</h3> 
         </Link>
-        <Link to='signup'>
-        <h3>Signup</h3> 
-        </Link>
+       
         <Link to='products'>
         <h3>Products</h3> 
+        </Link>
+        <Link to='cart'>
+        <h3>Cart</h3> 
         </Link>
     </div>
   )
