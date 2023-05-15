@@ -1,8 +1,8 @@
  import React, { useState } from 'react';
  import { Link } from 'react-router-dom';
+ import "../Styles/products.css"
 
-export const Products = (cartProducts) => {
-    const [cartProducts, setCartProducts] = useState([]);
+export const Products = () => {
   const [products, setProducts] = useState([
     { name: 'Tomato',prise:20, img: 'https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg', quantity: 1 },
     { name: 'Baingan',prise:20, img: 'https://t4.ftcdn.net/jpg/00/69/19/09/240_F_69190946_dO9NYtUPGwAcKBR3pzeuwNkQy9bRCDbg.jpg', quantity: 1 },
@@ -13,25 +13,27 @@ export const Products = (cartProducts) => {
   const handleQuantityIncrease = (index) => {
     setProducts((prevState) => {
       const updatedProducts = [...prevState];
+      console.log('Previous Quantity:', updatedProducts[index].quantity);
       updatedProducts[index].quantity += 1;
+      console.log('Updated Quantity:', updatedProducts[index].quantity);
       return updatedProducts;
     });
   };
-
+  
   const handleQuantityDes = (index) => {
     setProducts((prevState) => {
       const updatedProducts = [...prevState];
+      console.log('Previous Quantity:', updatedProducts[index].quantity);
       updatedProducts[index].quantity -= 1;
+      console.log('Updated Quantity:', updatedProducts[index].quantity);
       return updatedProducts;
     });
   };
+  
+
+ 
   const handleAddToCart = (product) => {
-    setCartProducts((prevState) => {
-      const updatedCartProducts = [...prevState];
-      updatedCartProducts.push(product);
-      return updatedCartProducts;
-    });
-    console.log(`Added ${product.name} to cart with quantity ${product.quantity}`);
+    alert(`Added ${product.name} to cart with quantity ${product.quantity}`);
   };
 
   return (
@@ -45,7 +47,7 @@ export const Products = (cartProducts) => {
             <p>Quantity: {product.quantity} Kg</p>
             <p>Amount: {product.prise *product.quantity}</p>
             <button onClick={() => handleQuantityIncrease(index)}>Increase Quantity</button>
-            <button disabled={product.quantity<2} onClick={() => handleQuantityDes(index)}>Decrease Quantity</button>
+            <button onClick={() => handleQuantityDes(index)}>Decrease Quantity</button>
 
             <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
           </div>
