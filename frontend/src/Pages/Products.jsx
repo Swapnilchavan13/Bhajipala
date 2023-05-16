@@ -1,59 +1,84 @@
- import React, { useState } from 'react';
- import { Link } from 'react-router-dom';
- import "../Styles/products.css"
+import React, { useEffect, useState } from 'react';
+import '../Styles/products.css';
 
 export const Products = () => {
-  const [products, setProducts] = useState([
-    { name: 'Tomato',prise:20, img: 'https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg', quantity: 1 },
-    { name: 'Baingan',prise:20, img: 'https://t4.ftcdn.net/jpg/00/69/19/09/240_F_69190946_dO9NYtUPGwAcKBR3pzeuwNkQy9bRCDbg.jpg', quantity: 1 },
-    { name: 'Carrot',prise:20, img: 'https://t3.ftcdn.net/jpg/01/88/50/62/240_F_188506264_8MMq2BHoDlfoBYHDxiYsYn1KGKbGT38S.jpg', quantity: 1 },
-    { name: 'Potato',prise:20, img: 'https://t3.ftcdn.net/jpg/00/41/30/10/240_F_41301053_AbLi3hlosbLajBo7lQdNyfGz9eusxY1x.jpg', quantity: 1 },
-  ]);
+  const [vegetables, setVegetables] = useState([]);
+  const [cart, setCart] = useState([]);
 
-  const handleQuantityIncrease = (index) => {
-    setProducts((prevState) => {
-      const updatedProducts = [...prevState];
-      console.log('Previous Quantity:', updatedProducts[index].quantity);
-      updatedProducts[index].quantity += 1;
-      console.log('Updated Quantity:', updatedProducts[index].quantity);
-      return updatedProducts;
-    });
-  };
-  
-  const handleQuantityDes = (index) => {
-    setProducts((prevState) => {
-      const updatedProducts = [...prevState];
-      console.log('Previous Quantity:', updatedProducts[index].quantity);
-      updatedProducts[index].quantity -= 1;
-      console.log('Updated Quantity:', updatedProducts[index].quantity);
-      return updatedProducts;
-    });
-  };
-  
+  useEffect(() => {
+    fetch('http://localhost:3000/vegitables')
+      .then(response => response.json())
+      .then(data => setVegetables(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
 
- 
-  const handleAddToCart = (product) => {
-    alert(`Added ${product.name} to cart with quantity ${product.quantity}`);
+  const increaseQuantity = (name) => {
+    setVegetables(prevVegetables =>
+      prevVegetables.map(vegetable => {
+        if (vegetable.name === name) {
+          return {
+            ...vegetable,
+            quantity: vegetable.quantity + 1
+          };
+        }
+        return vegetable;
+      })
+    );
+  };
+
+  const decreaseQuantity = (name) => {
+    setVegetables(prevVegetables =>
+      prevVegetables.map(vegetable => {
+        if (vegetable.name === name && vegetable.quantity > 0) {
+          return {
+            ...vegetable,
+            quantity: vegetable.quantity - 1
+          };
+        }
+        return vegetable;
+      })
+    );
+  };
+
+  const addToCart = (name) => {
+    const selectedVegetable = vegetables.find(vegetable => vegetable.name === name);
+    // Check if the selected vegetable is already in the cart
+    const isAlreadyInCart = cart.some(item => item.name === selectedVegetable.name);
+    if (isAlreadyInCart) {
+      alert('Product is already added to the cart');
+      return;
+    }
+    // Make an API request to add the selected vegetable to the cart
+    fetch('http://localhost:3000/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(selectedVegetable)
+    })
+      .then(response => response.json())
+      .then(data => {
+        setCart(prevCart => [...prevCart, data]);
+        console.log('Added to cart:', data);
+      })
+      .catch(error => console.error('Error:', error));
   };
 
   return (
-    <div>
-      <h2>Products</h2>
-      <div className="products-container">
-        {products.map((product, index) => (
-          <div className="product" key={index}>
-            <img src={product.img} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p>Quantity: {product.quantity} Kg</p>
-            <p>Amount: {product.prise *product.quantity}</p>
-            <button onClick={() => handleQuantityIncrease(index)}>Increase Quantity</button>
-            <button onClick={() => handleQuantityDes(index)}>Decrease Quantity</button>
-
-            <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+    <div className="vegetable-list">
+      {vegetables && vegetables.map(vegetable => (
+        <div key={vegetable.name} className="vegetable-card">
+          <img src={vegetable.img} alt={vegetable.name} />
+          <h2>{vegetable.name}</h2>
+          <p>Price: Rs.{vegetable.price}/Kg</p>
+          <p>Quantity: {vegetable.quantity}</p>
+          <div className="quantity-buttons">
+            <button className="quantity-button" onClick={() => decreaseQuantity(vegetable.name)}>-</button>
+            <button className="quantity-button" onClick={() => increaseQuantity(vegetable.name)}>+</button>
           </div>
-        ))}
-      </div>
-      <Link to="/cart">Go to Cart</Link>
+          <button className="add-to-cart-button" onClick={() => addToCart(vegetable.name)}>Add to Cart</button>
+        </div>
+      ))}
     </div>
   );
 };

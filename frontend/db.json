@@ -1,0 +1,37 @@
+{
+  "vegitables": [
+    {
+      "name": "Tomato",
+      "price": 20,
+      "img": "https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
+      "quantity": 1
+    },
+    {
+      "name": "Baingan",
+      "price": 20,
+      "img": "https://t4.ftcdn.net/jpg/00/69/19/09/240_F_69190946_dO9NYtUPGwAcKBR3pzeuwNkQy9bRCDbg.jpg",
+      "quantity": 1
+    },
+    {
+      "name": "Carrot",
+      "price": 20,
+      "img": "https://t3.ftcdn.net/jpg/01/88/50/62/240_F_188506264_8MMq2BHoDlfoBYHDxiYsYn1KGKbGT38S.jpg",
+      "quantity": 1
+    },
+    {
+      "name": "Potato",
+      "price": 20,
+      "img": "https://t3.ftcdn.net/jpg/00/41/30/10/240_F_41301053_AbLi3hlosbLajBo7lQdNyfGz9eusxY1x.jpg",
+      "quantity": 1
+    }
+  ],
+  "cart": [
+    {
+      "name": "Tomato",
+      "price": 20,
+      "img": "https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
+      "quantity": 5,
+      "id": 2
+    }
+  ]
+}
