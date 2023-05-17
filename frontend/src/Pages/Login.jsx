@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "../Styles/login.css"
+import '../Styles/login.css';
 
 export const Login = () => {
   const navigate = useNavigate();
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleMobileNumberChange = (e) => {
     setMobileNumber(e.target.value);
@@ -26,14 +27,21 @@ export const Login = () => {
   const handleOtpSubmit = (e) => {
     e.preventDefault();
     // Send mobile number and OTP to the server for verification
-    // For demonstration purpose, we're redirecting directly to the Products page
+    // For demonstration purpose, we're considering it as a successful login
+    setIsLoggedIn(true);
     navigate('/products');
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      {!showOtpInput && (
+      <h2>{isLoggedIn ? 'Logout' : 'Login'}</h2>
+      {isLoggedIn ? (
+        <button onClick={handleLogout}>Logout</button>
+      ) : !showOtpInput ? (
         <form onSubmit={handleMobileNumberSubmit}>
           <label htmlFor="mobileNumberInput">Mobile Number</label>
           <br />
@@ -41,15 +49,14 @@ export const Login = () => {
             type="tel"
             id="mobileNumberInput"
             value={mobileNumber}
-            placeholder='Enter Mobile Number'
+            placeholder="Enter Mobile Number"
             onChange={handleMobileNumberChange}
             required
           />
           <br />
           <button type="submit">Send OTP</button>
         </form>
-      )}
-      {showOtpInput && (
+      ) : (
         <form onSubmit={handleOtpSubmit}>
           <label htmlFor="otpInput">Enter OTP</label>
           <br />
