@@ -30,8 +30,83 @@
       "name": "Tomato",
       "price": 20,
       "img": "https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
-      "quantity": 5,
+      "quantity": 1,
+      "id": 1
+    },
+    {
+      "name": "Tomato",
+      "price": 20,
+      "img": "https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
+      "quantity": 6,
       "id": 2
+    }
+  ],
+  "user": [
+    {
+      "name": "Swapnil Chavan",
+      "address": "N-9, R26",
+      "mobile": "8878787878",
+      "id": 1
+    },
+    {
+      "name": "Swapnil Chavan",
+      "address": "N-9, R26",
+      "mobile": "8878787878",
+      "id": 2
+    },
+    {
+      "name": "",
+      "address": "",
+      "mobile": "",
+      "id": 3
+    },
+    {
+      "name": "",
+      "address": "",
+      "mobile": "",
+      "id": 4
+    },
+    {
+      "name": "swapnil Chavan",
+      "address": "n-9 r 26",
+      "mobile": "7878788787",
+      "id": 5
+    },
+    {
+      "name": "",
+      "address": "",
+      "mobile": "",
+      "id": 6
+    },
+    {
+      "name": "",
+      "address": "",
+      "mobile": "",
+      "id": 7
+    },
+    {
+      "name": "swapnil Chavan",
+      "address": "bcchgjbdwj",
+      "mobile": "8776676",
+      "id": 8
+    },
+    {
+      "name": "swapnill",
+      "address": "bsb",
+      "mobile": "77676565",
+      "id": 9
+    },
+    {
+      "name": "swapnill",
+      "address": "76",
+      "mobile": "987849759",
+      "id": 10
+    },
+    {
+      "name": "swapnill",
+      "address": "8nbn",
+      "mobile": "987849759",
+      "id": 11
     }
   ]
 }

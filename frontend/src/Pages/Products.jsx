@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import '../Styles/products.css';
 
+export const CartContext = createContext();
 export const Products = () => {
   const [vegetables, setVegetables] = useState([]);
   const [cart, setCart] = useState([]);
@@ -60,18 +61,31 @@ export const Products = () => {
       .then(data => {
         setCart(prevCart => [...prevCart, data]);
         console.log('Added to cart:', data);
+        console.log(cart.length)
+        setShowPopup(true); // Show the popup
+        setTimeout(() => {
+          setShowPopup(false); // Hide the popup after a certain time (e.g., 3 seconds)
+        }, 3000);
       })
       .catch(error => console.error('Error:', error));
   };
-
+  
+  // Add a state variable to control the visibility of the popup
+  const [showPopup, setShowPopup] = useState(false);
+  
   return (
     <div className="vegetable-list">
+        {showPopup && (
+    <div className="popup">
+      <p>Product added to cart!</p>
+    </div>
+  )}
       {vegetables && vegetables.map(vegetable => (
         <div key={vegetable.name} className="vegetable-card">
           <img src={vegetable.img} alt={vegetable.name} />
           <h2>{vegetable.name}</h2>
           <p>Price: Rs.{vegetable.price}/Kg</p>
-          <p>Quantity: {vegetable.quantity}</p>
+          <p>Quantity: {vegetable.quantity} Kg</p>
           <div className="quantity-buttons">
             <button className="quantity-button" onClick={() => decreaseQuantity(vegetable.name)}>-</button>
             <button className="quantity-button" onClick={() => increaseQuantity(vegetable.name)}>+</button>

@@ -47,6 +47,45 @@
   cursor: pointer;
 }
 
+.popup {
+  position: fixed;
+  top: 20%;
+  color: white;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #44d320;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.popup p {
+  margin: 0;
+}
+
+/* Add animation for the popup */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.popup {
+  animation: fadeInOut 3s ease-in-out;
+}
+
+
 .add-to-cart-button {
   padding: 10px 20px;
   font-size: 1rem;

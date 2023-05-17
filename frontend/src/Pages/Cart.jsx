@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import "../Styles/cart.css";
 
 export const Cart = () => {
@@ -65,6 +66,9 @@ export const Cart = () => {
           </tr>
         </tfoot>
       </table>
+      <Link to="payment">
+      <button>Confirm Order</button>
+      </Link>
     </div>
   );
 };
