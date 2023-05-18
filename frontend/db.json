@@ -27,18 +27,18 @@
   ],
   "cart": [
     {
-      "name": "Tomato",
+      "name": "Potato",
       "price": 20,
-      "img": "https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
-      "quantity": 1,
-      "id": 1
+      "img": "https://t3.ftcdn.net/jpg/00/41/30/10/240_F_41301053_AbLi3hlosbLajBo7lQdNyfGz9eusxY1x.jpg",
+      "quantity": 4,
+      "id": 5
     },
     {
-      "name": "Tomato",
+      "name": "Carrot",
       "price": 20,
-      "img": "https://t4.ftcdn.net/jpg/05/37/04/61/240_F_537046123_s8JVn2NrClPQDOryhSm8jonYZPfIzPRX.jpg",
-      "quantity": 6,
-      "id": 2
+      "img": "https://t3.ftcdn.net/jpg/01/88/50/62/240_F_188506264_8MMq2BHoDlfoBYHDxiYsYn1KGKbGT38S.jpg",
+      "quantity": 1,
+      "id": 6
     }
   ],
   "user": [
