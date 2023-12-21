@@ -132,8 +132,6 @@ const Game = () => {
       <button onClick={handleLaunchClick} disabled={isLaunched} style={{ fontSize: '16px', position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', marginLeft: '120px', borderRadius: '50%', padding: '5px', backgroundColor: 'green', color: 'white' }}>Launch Rocket</button>
       <div style={{color:'white', fontSize: '14px', position: 'absolute', bottom: '40px', left: '50%', marginLeft: '-100px', transform: 'translateX(-50%)' }}>Score: {score}</div>
       <div style={{color:'white', fontSize: '14px', position: 'absolute', marginLeft: '-100px', bottom: '20px', left: '50%', transform: 'translateX(-50%)' }}>Hits: {hits}</div>
-      <div style={{color:'white', fontSize: '14px', position: 'absolute', marginLeft: '-100px', bottom: '0px', left: '50%', transform: 'translateX(-50%)' }}>Misses: {misses}</
-      div>
 {(gameOver || allTargetsStopped) && (
 <div style={{ width: '200px', height: '100px', position: 'absolute', bottom: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.7)', color: 'white', padding: '20px', borderRadius: '10px' }}>
 {gameOver ? 'Game Over!' : 'You Won!'}
