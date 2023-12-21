@@ -18,7 +18,7 @@ const Game = () => {
   const [timer, setTimer] = useState(30);
   const [gameOver, setGameOver] = useState(false);
 
-  const boxHeight = 750;
+  const boxHeight = 765;
   const boxWidth = 100;
   const rocketHeight = 20;
   const targetHeight = 20;
