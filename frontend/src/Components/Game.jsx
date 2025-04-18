@@ -1,148 +1,222 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const Game = () => {
-  const [rocketPosition, setRocketPosition] = useState({ x: 50, y: 0 });
-  const [targets, setTargets] = useState([
-    { id: 1, position: 10, speed: 3.8, stopped: false },
-    { id: 2, position: 60, speed: 2.4, stopped: false },
-    { id: 3, position: 100, speed: 5.5, stopped: false },
-    { id: 4, position: 150, speed: 1.3, stopped: false },
-    { id: 5, position: 200, speed: 7.6, stopped: false },
-  ]);
-
-  const [isLaunched, setIsLaunched] = useState(false);
+const RocketFightGame = () => {
+  const [angle, setAngle] = useState(0);
+  const [bullets, setBullets] = useState([]);
+  const [enemies, setEnemies] = useState([]);
   const [score, setScore] = useState(0);
-  const [hits, setHits] = useState(0);
-  const [misses, setMisses] = useState(0);
-  const [backgroundColor, setBackgroundColor] = useState('white');
-  const [timer, setTimer] = useState(30);
-  const [gameOver, setGameOver] = useState(false);
+  const bulletIdRef = useRef(0);
+  const boxWidth = 800;
+  const boxHeight = 600;
+  const rocketCenterX = boxWidth / 2;
+  const rocketCenterY = boxHeight / 2;
 
-  const boxHeight = 765;
-  const boxWidth = 100;
-  const rocketHeight = 20;
-  const targetHeight = 20;
-  const hitRangeX = 5;
-  const targetYPositions = [140, 280, 420, 560, 700];
-
+  // Auto-rotate rocket
   useEffect(() => {
-    let moveTargets = setInterval(() => {
-      setTargets(prevTargets => prevTargets.map(target => {
-        if (target.stopped) return target;
-
-        return {
-          ...target,
-          position: (target.position + target.speed) % boxWidth
-        };
-      }));
-    }, 100);
-
-    return () => clearInterval(moveTargets);
+    const interval = setInterval(() => {
+      setAngle(prev => (prev + 2) % 360);
+    }, 50);
+    return () => clearInterval(interval);
   }, []);
 
+  // Generate enemies with random velocities
   useEffect(() => {
-    if (!gameOver && !allTargetsStopped && timer > 0) {
-      var interval = setInterval(() => {
-        setTimer(prevTimer => {
-          if (prevTimer === 1) {
-            setGameOver(true);
-            clearInterval(interval);
-            return 0;
-          }
-          return prevTimer - 1;
-        });
-      }, 1000);
-    }
+    const initialEnemies = Array.from({ length: 10 }).map((_, idx) => ({
+      id: idx,
+      x: Math.random() * (boxWidth - 30),
+      y: Math.random() * (boxHeight - 30),
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.5) * 4,
+      alive: true,
+    }));
+    setEnemies(initialEnemies);
+  }, []);
 
+  // Move enemies randomly
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEnemies(prev =>
+        prev.map(enemy => {
+          if (!enemy.alive) return enemy;
+          let newX = enemy.x + enemy.vx;
+          let newY = enemy.y + enemy.vy;
+          if (newX < 0 || newX > boxWidth - 30) enemy.vx *= -1;
+          if (newY < 0 || newY > boxHeight - 30) enemy.vy *= -1;
+          return { ...enemy, x: newX, y: newY };
+        })
+      );
+    }, 30);
     return () => clearInterval(interval);
-  }, [gameOver, allTargetsStopped, timer]);
+  }, []);
 
-  useEffect(() => {
-    if (isLaunched) {
-      const rocketFlight = setInterval(() => {
-        setRocketPosition(prev => {
-          const newY = prev.y + 2;
-          if (newY > boxHeight) {
-            clearInterval(rocketFlight);
-            setIsLaunched(false);
-            setBackgroundColor('white');
-            return { ...prev, y: 0 };
-          }
+  // Fire bullets
+  const handleFire = () => {
+    const rad = (angle * Math.PI) / 180;
+    const bulletSpeed = 7;
+    const rocketRadius = 35;
+    const bulletX = rocketCenterX + Math.cos(rad) * rocketRadius;
+    const bulletY = rocketCenterY - Math.sin(rad) * rocketRadius;
 
-          return { ...prev, y: newY };
-        });
-      }, 10);
-
-      return () => clearInterval(rocketFlight);
-    }
-  }, [isLaunched]);
-
-  useEffect(() => {
-    if (isLaunched) {
-      const checkCollision = () => {
-        const newY = rocketPosition.y;
-        targets.forEach((target, index) => {
-          const targetY = boxHeight - targetYPositions[index];
-          const isVerticalOverlap = newY + rocketHeight >= targetY && newY <= targetY + targetHeight;
-          const isHorizontalOverlap = Math.abs(target.position - rocketPosition.x) <= hitRangeX;
-
-          if (isVerticalOverlap && isHorizontalOverlap && !target.stopped) {
-            setTargets(prevTargets => prevTargets.map(t => t.id === target.id ? { ...t, stopped: true } : t));
-            setScore(prev => prev + 10);
-            setHits(prev => prev + 1);
-            setBackgroundColor('green');
-          }
-        });
-      };
-
-      checkCollision();
-    }
-  }, [rocketPosition, targets, isLaunched]);
-
-  const handleLaunchClick = () => {
-    setIsLaunched(true);
-  };
-
-  var allTargetsStopped = targets.every(target => target.stopped);
-
-  const handleRestart = () => {
-    setRocketPosition({ x: 50, y: 0 });
-    setTargets([
-      { id: 1, position: 10, speed: 3.8, stopped: false },
-      { id: 2, position: 60, speed: 2.4, stopped: false },
-      { id: 3, position: 100, speed: 5.5, stopped: false },
-      { id: 4, position: 150, speed: 1.3, stopped: false },
-      { id: 5, position: 200, speed: 7.6, stopped: false },
+    setBullets(prev => [
+      ...prev,
+      {
+        id: bulletIdRef.current++,
+        x: bulletX,
+        y: bulletY,
+        vx: Math.cos(rad) * bulletSpeed,
+        vy: -Math.sin(rad) * bulletSpeed,
+      },
     ]);
-    setIsLaunched(false);
-    setScore(0);
-    setHits(0);
-    setMisses(0);
-    setBackgroundColor('white');
-    setTimer(30);
-    setGameOver(false);
   };
+
+  // Move bullets
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBullets(prev =>
+        prev
+          .map(bullet => ({
+            ...bullet,
+            x: bullet.x + bullet.vx,
+            y: bullet.y + bullet.vy,
+          }))
+          .filter(bullet =>
+            bullet.x >= 0 &&
+            bullet.x <= boxWidth &&
+            bullet.y >= 0 &&
+            bullet.y <= boxHeight
+          )
+      );
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Collision detection
+  useEffect(() => {
+    setEnemies(prevEnemies =>
+      prevEnemies.map(enemy => {
+        if (!enemy.alive) return enemy;
+        const hit = bullets.some(
+          bullet =>
+            bullet.x >= enemy.x &&
+            bullet.x <= enemy.x + 30 &&
+            bullet.y >= enemy.y &&
+            bullet.y <= enemy.y + 30
+        );
+        if (hit) {
+          setScore(prev => prev + 10);
+          return { ...enemy, alive: false };
+        }
+        return enemy;
+      })
+    );
+  }, [bullets]);
 
   return (
-    <div style={{backgroundImage: 'url(https://alrightblog951505478.files.wordpress.com/2018/12/milky-way-starry-sky-night-sky-star-957061.jpeg?w=1200)', position: 'relative', height: `${boxHeight}px`, width: `${boxWidth}%`, border: '1px solid black', backgroundColor, margin: '0 auto', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', bottom: `${rocketPosition.y}px`, left: `${rocketPosition.x}%`, fontSize: '20px', border: '1px solid black', padding: '5px', borderRadius: '50%' }}>🛸</div>
-      {targets.map((target, index) => (
-        <div key={target.id} style={{ position: 'absolute', top: `${boxHeight - targetYPositions[index]}px`, left: `${target.position}%`, fontSize: '20px', opacity: target.stopped ? 0.5 : 1 }}>👽</div>
+    <div
+      style={{
+        position: 'relative',
+        height: `${boxHeight}px`,
+        width: `${boxWidth}px`,
+        border: '2px solid white',
+        backgroundColor: 'black',
+        overflow: 'hidden',
+        margin: 'auto',
+      }}
+    >
+      {/* Rocket */}
+      <div
+        style={{
+          position: 'absolute',
+          left: `${rocketCenterX}px`,
+          top: `${rocketCenterY}px`,
+          transform: `translate(-50%, -50%) rotate(${-angle}deg)`,
+          fontSize: '30px',
+        }}
+      >
+        <img width="100px" src="https://static.vecteezy.com/system/resources/previews/046/947/282/non_2x/ak-47-assault-rifle-on-transparent-background-free-png.png" alt="" />
+      </div>
+
+      {/* Gun line */}
+      <div/>
+
+      {/* Bullets */}
+      {bullets.map(bullet => (
+        <div
+          key={bullet.id}
+          style={{
+            position: 'absolute',
+            left: `${bullet.x}px`,
+            top: `${bullet.y}px`,
+            width: '6px',
+            height: '6px',
+            backgroundColor: 'yellow',
+            borderRadius: '50%',
+          }}
+        />
       ))}
-      <button onClick={handleLaunchClick} disabled={isLaunched} style={{ fontSize: '16px', position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', marginLeft: '120px', borderRadius: '50%', padding: '5px', backgroundColor: 'green', color: 'white' }}>Launch Rocket</button>
-      <div style={{color:'white', fontSize: '14px', position: 'absolute', bottom: '40px', left: '50%', marginLeft: '-100px', transform: 'translateX(-50%)' }}>Score: {score}</div>
-      <div style={{color:'white', fontSize: '14px', position: 'absolute', marginLeft: '-100px', bottom: '20px', left: '50%', transform: 'translateX(-50%)' }}>Hits: {hits}</div>
-{(gameOver || allTargetsStopped) && (
-<div style={{ width: '200px', height: '100px', position: 'absolute', bottom: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.7)', color: 'white', padding: '20px', borderRadius: '10px' }}>
-{gameOver ? 'Game Over!' : 'You Won!'}
-<br />
-<button onClick={handleRestart} style={{ marginTop: '10px', padding: '5px', borderRadius: '5px', fontSize: '16px', backgroundColor: 'green', color: 'white' }}>Restart</button>
-</div>
-)}
-{timer > 0 && <div style={{color:'white', fontSize: '16px', position: 'absolute', top: '10px', left: '10px'}}>Time Left: {timer}s</div>}
-</div>
-);
+
+      {/* Enemies */}
+      {enemies.map(enemy =>
+        enemy.alive ? (
+          <div
+            key={enemy.id}
+            style={{
+              position: 'absolute',
+              left: `${enemy.x}px`,
+              top: `${enemy.y}px`,
+              fontSize: '30px',
+            }}
+          >
+            👾
+          </div>
+        ) : (
+          <div
+            key={enemy.id}
+            style={{
+              position: 'absolute',
+              left: `${enemy.x}px`,
+              top: `${enemy.y}px`,
+              fontSize: '30px',
+              color: 'red',
+            }}
+          >
+            💥
+          </div>
+        )
+      )}
+
+      {/* Fire Button */}
+      <button
+        onClick={handleFire}
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          padding: '10px 20px',
+          fontSize: '18px',
+          backgroundColor: 'green',
+          color: 'white',
+          borderRadius: '10px',
+        }}
+      >
+        Fire
+      </button>
+
+      {/* Score */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          color: 'white',
+          fontSize: '18px',
+        }}
+      >
+        Score: {score}
+      </div>
+    </div>
+  );
 };
 
-export default Game;
-
+export default RocketFightGame;
