@@ -137,7 +137,17 @@ const RocketFightGame = () => {
       </div>
 
       {/* Gun line */}
-      <div/>
+      <div
+        style={{
+          position: 'absolute',
+          left: `${rocketCenterX}px`,
+          top: `${rocketCenterY}px`,
+          width: '40px',
+          height: '2px',
+          transformOrigin: 'left center',
+          transform: `translateY(-50%) rotate(${-angle}deg)`,
+        }}
+      />
 
       {/* Bullets */}
       {bullets.map(bullet => (
@@ -180,7 +190,7 @@ const RocketFightGame = () => {
               color: 'red',
             }}
           >
-            💥
+            💀
           </div>
         )
       )}

@@ -1,0 +1,80 @@
+:root {
+    --game-width: 800px;
+    --game-height: 600px;
+  }
+  
+  @media (max-width: 768px) {
+    :root {
+      --game-width: 100vw;
+      --game-height: calc(100vw * 0.75); /* 4:3 aspect ratio */
+    }
+  }
+  
+  .game-container {
+    position: relative;
+    width: var(--game-width);
+    height: var(--game-height);
+    border: 2px solid white;
+    background-color: black;
+    overflow: hidden;
+    margin: auto;
+  }
+  
+  .rocket {
+    position: absolute;
+    width: 10%; /* scales with container */
+    max-width: 100px;
+    transform-origin: center center;
+  }
+  
+  .gun-line {
+    position: absolute;
+    width: 5%;   /* scales with container */
+    height: 2px;
+    transform-origin: left center;
+  }
+  
+  .bullet {
+    position: absolute;
+    width: 1%;  /* scales with container */
+    aspect-ratio: 1;
+    background-color: yellow;
+    border-radius: 50%;
+  }
+  
+  .enemy {
+    position: absolute;
+    font-size: 4%; /* scales with container */
+  }
+  
+  .button-fire {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2% 4%;   /* scales */
+    font-size: 2.5vw; /* scales */
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .scoreboard {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 1.5vw;
+  }
+  
+  @media (max-width: 768px) {
+    .button-fire {
+      font-size: 4vw;
+      padding: 3% 6%;
+    }
+    .scoreboard {
+      font-size: 3vw;
+    }
+  }
+  
