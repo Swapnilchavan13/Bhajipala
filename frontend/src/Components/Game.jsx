@@ -149,6 +149,9 @@ const RocketFightGame = () => {
         }}
       />
 
+
+
+
       {/* Bullets */}
       {bullets.map(bullet => (
         <div

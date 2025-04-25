@@ -44,7 +44,7 @@
   
   .enemy {
     position: absolute;
-    font-size: 4%; /* scales with container */
+    font-size: 4%; 
   }
   
   .button-fire {
@@ -71,7 +71,7 @@
   @media (max-width: 768px) {
     .button-fire {
       font-size: 4vw;
-      padding: 3% 6%;
+      padding: 5% 6%;
     }
     .scoreboard {
       font-size: 3vw;
